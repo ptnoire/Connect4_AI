@@ -30,6 +30,12 @@ class RowCellView extends view_1.View {
             ?.querySelector(`[data-col="${data[1]}"]`)
             ?.classList.add(`player${data[2]}`);
     }
+    clear() {
+        this._cells.forEach(el => {
+            el.classList.remove('player1');
+            el.classList.remove('player2');
+        });
+    }
 }
 exports.RowCellView = RowCellView;
 exports.default = new RowCellView();

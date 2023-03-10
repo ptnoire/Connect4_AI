@@ -10,29 +10,42 @@ let board = [
   
 let currentPlayer = 1;
 
+// Game State for checkWin function?
+
+export function reset() {
+  // Probably a 'nicer' way to do this but this works fine.
+
+  board = [
+    [0, 0, 0, 0, 0, 0, 0], 
+    [0, 0, 0, 0, 0, 0, 0], 
+    [0, 0, 0, 0, 0, 0, 0], 
+    [0, 0, 0, 0, 0, 0, 0], 
+    [0, 0, 0, 0, 0, 0, 0], 
+    [0, 0, 0, 0, 0, 0, 0], 
+  ];
+}
+
 export function makeMove(col: number) {
-    let cRow = 0; let cRap = currentPlayer;
-    for (let row = 5; row >= 0; row--) {
-        if (board[row][col] === 0) {
-            board[row][col] = currentPlayer;
-            cRow = row;
-            break;
-        }
+  let cRow = 0; let cRap = currentPlayer;
+
+  for (let row = 5; row >= 0; row--) {
+    if (board[row][col] === 0) {
+        board[row][col] = currentPlayer;
+        cRow = row;
+        break;
     }
-    currentPlayer = currentPlayer === 1 ? 2 : 1;
-    return [cRow, +col, cRap];
-}
+  }
 
-const boardChange = () => {
-    const [row6, row5, row4, row3, row2, row1] = board;
+  checkForWin();
+  currentPlayer = currentPlayer === 1 ? 2 : 1;
+  return [cRow, +col, cRap];
 }
-
 
 export const init = () => {
 
 }
 
-function checkForWin() {
+export function checkForWin() {
     // Check horizontal
     for (let row = 0; row < 6; row++) {
       for (let col = 0; col < 4; col++) {
@@ -42,7 +55,7 @@ function checkForWin() {
           board[row][col + 2] === currentPlayer &&
           board[row][col + 3] === currentPlayer
         ) {
-          return true;
+          console.log('You Win! Horizontal!');
         }
       }
     }
@@ -56,7 +69,7 @@ function checkForWin() {
           board[row + 2][col] === currentPlayer &&
           board[row + 3][col] === currentPlayer
         ) {
-          return true;
+          console.log('You Win! Vertical!');
         }
       }
     }
@@ -70,7 +83,7 @@ function checkForWin() {
           board[row + 2][col + 2] === currentPlayer &&
           board[row + 3][col + 3] === currentPlayer
         ) {
-          return true;
+          console.log('You Win! Diagonal!');
         }
       }
     }
@@ -84,7 +97,7 @@ function checkForWin() {
           board[row + 2][col - 2] === currentPlayer &&
           board[row + 3][col - 3] === currentPlayer
         ) {
-          return true;
+          console.log('You Win! Diagonal!');
         }
       }
     }

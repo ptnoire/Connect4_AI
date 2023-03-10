@@ -1,20 +1,66 @@
 :root {
-    --black-: rgb(21, 21, 21);
-    --white-: rgb(220, 220, 220);
-    --player1-: rgb(218, 71, 71);
-    --player2-: rgb(57, 57, 176);
+    --black-: #151515;
+    --white-: #dcdcdc;
+    --player1-: #da4747;
+    --player2-: #3939b0;
+    --font-: Impact;
 }
 
-body {
-    background-color: var(--black-);
+html { overflow: hidden; }
+
+
+
+button {
+    font-family: var(--font-);
+    font-size: 1.2rem;
+    border: 2px solid var(--white-);
+    background: var(--black-);
+    border-radius: 20px;
+    color: var(--white-);
+    padding: 10px;
+    transition: all .5s;
 }
+
+button:hover {
+    border: 2px inset var(--black-);
+    background: var(--white-);
+    color: var(--black-);
+    transition: all .5s;
+}
+
+nav {
+    font-family: var(--font-);
+    background-color: var(--black-);
+    color: var(--white-);
+    position: absolute;
+    top: 0;
+    display: flex;
+    left: 0;
+    right: 0;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+h2 {
+    font-family: var(--font-);
+    opacity: .8;
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    text-align: center;
+    font-size: 250px;
+    color: var(--black-);
+    z-index: -3;
+}
+
 
 table { 
+    background-color: var(--black-);
     position: relative;
     margin-top: 10%;
     margin-left: auto;
     margin-right: auto;
     border: 1px solid var(--black-);
+    border-radius: 30px;
     padding: 5px;
     box-shadow: 0 12px 12px -4px rgb(0, 0, 0);
     z-index: 1;
@@ -26,23 +72,39 @@ td {
     width: 50px;
     border-top: 3px inset rgba(0, 0, 0, 0.552);
     border-radius: 50%;
+    z-index: 2;
+}
+
+td:hover {
+    background-color: var(--white-);
+    transition: all .3s;
 }
 
 .player1 {
     background-color: var(--player1-);
     z-index: -1;
-    animation: bounce 2s ease-in-out;
+    animation: bounce 1.3s ease-in-out;
 }
 
 .player2 {
     background-color: var(--player2-);
     z-index: -1;
-    animation: bounce 2s ease-in-out;
+    animation: bounce 1.3s ease-in-out;
 }
 
 @keyframes bounce {
-    0% { opacity: 0;
-    transform: translateY(-1000%) ;}
-    100% { opacity: 1;
-    transform: translateY(0px); }
+    0% { 
+        filter: invert(100%);
+        opacity: 0;
+        transform: translateY(-1000%);
+    }
+    100% {
+        width: 50px;
+        opacity: .9;
+        transform: translateY(0px); 
+    }
   }
+
+@media only screen and (max-width: 600px) {
+    table { margin-top: 25%; }
+}

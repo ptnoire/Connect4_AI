@@ -1,12 +1,18 @@
 import * as model from './model';
-import cellView from './views/cellView';
 import RowCellView from './views/cellView';
-import { View } from './views/view';
+import navView from './views/navView';
 
 const makeMove = (col : number) => {
-  cellView.render(model.makeMove(col));
+  RowCellView.render(model.makeMove(col));
 }
+
+const resetBoard = () => {
+  model.reset();
+  RowCellView.clear();
+}
+
 (() => {
-  RowCellView.init()
-  RowCellView.addClickHandler(makeMove)
+  RowCellView.init();
+  RowCellView.addClickHandler(makeMove);
+  navView.addResetHandler(resetBoard);
 })();
