@@ -1,0 +1,48 @@
+:root {
+    --black-: rgb(21, 21, 21);
+    --white-: rgb(220, 220, 220);
+    --player1-: rgb(218, 71, 71);
+    --player2-: rgb(57, 57, 176);
+}
+
+body {
+    background-color: var(--black-);
+}
+
+table { 
+    position: relative;
+    margin-top: 10%;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid var(--black-);
+    padding: 5px;
+    box-shadow: 0 12px 12px -4px rgb(0, 0, 0);
+    z-index: 1;
+}
+
+td { 
+    position: relative;
+    height: 50px;
+    width: 50px;
+    border-top: 3px inset rgba(0, 0, 0, 0.552);
+    border-radius: 50%;
+}
+
+.player1 {
+    background-color: var(--player1-);
+    z-index: -1;
+    animation: bounce 2s ease-in-out;
+}
+
+.player2 {
+    background-color: var(--player2-);
+    z-index: -1;
+    animation: bounce 2s ease-in-out;
+}
+
+@keyframes bounce {
+    0% { opacity: 0;
+    transform: translateY(-1000%) ;}
+    100% { opacity: 1;
+    transform: translateY(0px); }
+  }

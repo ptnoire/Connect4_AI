@@ -1,0 +1,15 @@
+{    
+  "name": "connect_4_greg",
+  "version": "1.0.0",
+  "description": "Connect 4 vs an AI",
+  "default": "index.html",
+"scripts": {
+  "start": "parcel index.html",
+  "build": "parcel build index.html --dist-dir ./dist"
+},
+"author": "PT Anderson",
+"license": "ISC",
+  "devDependencies": {
+    "parcel": "^2.8.3"
+  }
+}
