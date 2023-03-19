@@ -34,7 +34,30 @@ class RowCellView extends view_1.View {
         this._cells.forEach(el => {
             el.classList.remove('player1');
             el.classList.remove('player2');
+            el.classList.remove('winning');
         });
+        this._rows.forEach(el => {
+            el.classList.remove('winning');
+        });
+    }
+    renderWinningMoves(data) {
+        const col = data.slice(1);
+        if (data.length === 5) {
+            col.forEach(el => this.colWinRender(data[0], el));
+        }
+        if (data.length === 8) {
+            const row = data.slice(5);
+            const col = data.slice(2, 5);
+            this.colWinRender(data[0], data[1]);
+            for (let i = 0; i < 3; i++) {
+                this.colWinRender(row[i], col[i]);
+            }
+        }
+    }
+    colWinRender(row, col) {
+        this._parentElement?.querySelector(`[data-row="${row}"]`)
+            ?.querySelector(`[data-col="${col}"]`)
+            ?.classList.add('winning');
     }
 }
 exports.RowCellView = RowCellView;

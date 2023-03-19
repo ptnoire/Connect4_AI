@@ -83,13 +83,23 @@ td:hover {
 .player1 {
     background-color: var(--player1-);
     z-index: -1;
-    animation: bounce 1.3s ease-in-out;
+    animation: bounce .8s ease-in-out;
 }
 
 .player2 {
     background-color: var(--player2-);
     z-index: -1;
-    animation: bounce 1.3s ease-in-out;
+    animation: bounce .8s ease-in-out;
+}
+
+.winning {
+    clip-path: polygon(50% 0%, 65% 26%, 98% 35%, 77% 57%, 79% 91%, 50% 77%, 21% 91%, 25% 57%, 2% 35%, 34% 27%);
+    transition: all 1s;
+}
+
+.winScreen {
+    color: #da4747;
+    animation: flash 3s infinite alternate;
 }
 
 @keyframes bounce {
@@ -103,7 +113,12 @@ td:hover {
         opacity: .9;
         transform: translateY(0px); 
     }
-  }
+}
+
+@keyframes flash {
+    0% { filter: hue-rotate(0deg);}
+    100% { filter: hue-rotate(360deg);}
+}
 
 @media only screen and (max-width: 600px) {
     table { margin-top: 25%; }
