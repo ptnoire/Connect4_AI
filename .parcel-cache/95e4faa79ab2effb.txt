@@ -15,7 +15,7 @@
 104D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\terser\bin\package.json133228898642419982 0
 105D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\weak-lru-cache\README.md133228898627230487 0
 121D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\@parcel\diagnostic\test\markdown.test.js133228898622269398 0
-72D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\dist133236703964956839 1
+72D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\dist133236786287744544 1
 123D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\@parcel\transformer-react-refresh-wrap\lib133228898622358423 1
 119D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\terser\node_modules\commander\index.js133228898619184472 0
 90D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\@mischnic133228898606094916 1
@@ -82,7 +82,7 @@
 111D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\@parcel\watcher\src\Backend.hh133228898632180490 0
 126D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\@parcel\source-map\dist\wasm-bindings.js.flow133228898626193940 0
 75D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\src\img133229510886914332 1
-88D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\src\js\controller.ts133235544745275739 0
+88D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\src\js\controller.ts133236780164666983 0
 87D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\braces133228898623151256 1
 126D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\@parcel\optimizer-image\lib\ImageOptimizer.js133228898619159666 0
 109D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\mdn-data\css\properties.json133228898632185451 0
@@ -96,7 +96,7 @@
 126D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\@swc\helpers\src\_class_private_field_set.mjs133228898645709194 0
 112D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\caniuse-lite\data\regions\PL.js133228898657711521 0
 88D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\src\js\views\view.ts133228969354755769 0
-83D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\src\js\model.ts133236703960622401 0
+83D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\src\js\model.ts133236786283491453 0
 129D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\@swc\helpers\lib\_check_private_redeclaration.js133228898629533232 0
 110D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\type-fest\source\mutable.d.ts133228898633380187 0
 95D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\domelementtype133228898627185847 1
@@ -297,7 +297,7 @@
 141D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\posthtml\node_modules\posthtml-parser\dist\chunk.2UQLUWPH.js133228898619179516 0
 102D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\@parcel\cache\LICENSE133228898617717906 0
 89D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\get-port133228898621955380 1
-90D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\dist\index.d881367f.js133236703964922127 0
+90D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\dist\index.d881367f.js133236786287694954 0
 127D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\caniuse-lite\data\features\webkit-user-drag.js133228898661854641 0
 115D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\svgo\plugins\convertShapeToPath.js133228898633087554 0
 88D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\globals133228898626144328 1
@@ -2372,7 +2372,7 @@
 119D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\csso\lib\restructure\7-mergeRuleset.js133228898626893208 0
 112D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\caniuse-lite\data\regions\TL.js133228898660505516 0
 110D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\csso\lib\restructure\utils.js133228898639762084 0
-87D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\build\controller.js133236656937038345 0
+87D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\build\controller.js133236780167444055 0
 104D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\braces\lib\stringify.js133228898628167044 0
 128D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\csso\lib\restructure\prepare\processSelector.js133228898637559682 0
 124D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\csso\lib\restructure\prepare\specificity.js133228898638553063 0
@@ -4277,10 +4277,10 @@
 96D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\.bin\terser.cmd133228898668452616 0
 96D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\node_modules\.bin\terser.ps1133228898668452616 0
 91D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\dist\index.3a01df49.css133236645922041489 0
-94D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\dist\index.d881367f.js.map133236703964951881 0
+94D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\dist\index.d881367f.js.map133236786287724707 0
 91D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\dist\wave1.8ba3f2a4.svg133229513821006906 0
 83D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\build\config.js133236644614644059 0
-82D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\build\model.js133236703963730906 0
+82D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\build\model.js133236786286929782 0
 81D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\build\test.js133236654478165758 0
 79D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\build\views133229465650467074 1
 90D:\Documents HDD\2022 Coding Education\Practice Room\connect_4_greg\build\views\navView.js133236644615025990 0

@@ -4,11 +4,18 @@ import RowCellView from './views/cellView';
 import navView from './views/navView';
 
 const makeMove = (col : number) => {
-  if(model.gameState === '') RowCellView.render(model.makeMove(col));
+  if(model.gameState === '') {
+    RowCellView.render(model.makeMove(col));
+    switchTurn();
+  }
   if(model.gameState !== '') {
     navView.titleChange(model.gameState);
     cellView.renderWinningMoves(model.winningMove);
   }
+}
+
+const switchTurn = () => {
+  RowCellView.render(model.makeMove(model.AImove()));
 }
 
 const resetBoard = () => {

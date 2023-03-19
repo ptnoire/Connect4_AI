@@ -1,4 +1,4 @@
-let board = [
+export let board = [
     [0, 0, 0, 0, 0, 0, 0], 
     [0, 0, 0, 0, 0, 0, 0], 
     [0, 0, 0, 0, 0, 0, 0], 
@@ -11,7 +11,7 @@ export let currentPlayer = 1;
 
 export let gameState = '';
 export let winningMove:Array<number> = [];
-export let AI_DIFFICULTY = 7;
+export let AI_DIFFICULTY = 3;
 
 export function reset() {
   board = [
@@ -40,11 +40,6 @@ export function makeMove(col: number) {
   checkForWin()
   currentPlayer = currentPlayer === 1 ? 2 : 1;
   return [cRow, +col, cRap];
-  
-}
-
-export const init = () => {
-
 }
 
 export function checkForWin() {
@@ -59,7 +54,6 @@ export function checkForWin() {
       ) { 
         gameState = `Player ${currentPlayer} Wins! Horizontal!`;
         winningMove.push(row, col, col+1, col+2, col+3);
-        console.log(gameState, winningMove);
       }
     }
   }
@@ -74,8 +68,7 @@ export function checkForWin() {
         board[row + 3][col] === currentPlayer
       ) { 
         gameState = `PLAYER ${currentPlayer} WINS! VERTICAL!`;
-        winningMove.push(row, col, col, col, col, row+1, row+2, row+3);
-        console.log(gameState, winningMove); 
+        winningMove.push(row, col, col, col, col, row+1, row+2, row+3); 
       }
     }
   }
@@ -91,7 +84,6 @@ export function checkForWin() {
       ) { 
         gameState = `PLAYER ${currentPlayer} WINS! DIAGONAL!`;
         winningMove.push(row, col, col+1, col+2, col+3, row+1, row+2, row+3);
-        console.log(gameState, winningMove);
      }
     }
   }
@@ -107,7 +99,6 @@ export function checkForWin() {
       ) { 
         gameState = `PLAYER ${currentPlayer} WINS! DIAGONAL!`;
         winningMove.push(row, col, col-1, col-2, col-3, row+1, row+2, row+3);
-        console.log(gameState, winningMove);
      }
     }
   }
@@ -119,13 +110,12 @@ export function checkForWin() {
 
 /// AI BELOW ///
 
-if(currentPlayer === 2) {
 
-  const checkPossibleMoves = function(board: Array<Array<number>>) {
+  const checkPossibleMoves = function(mockBoard: Array<Array<number>>) {
     // A possible move is defined by columns, checks to see if any column is full.
     let possibleMoves = [];
     for (let col = 0; col < 7; col++) {
-      if (board[0][col] === 0) {
+      if (mockBoard[0][col] === 0) {
         possibleMoves.push(col);
       }
     }
@@ -133,77 +123,110 @@ if(currentPlayer === 2) {
   }
 
   // Similar to makemove function but we are doing a fake move that the computer can use to determine the outcomes in a minmax method.
-  const mockMove = function(board: Array<Array<number>>, col: number, player: number) {
+  const mockMove = function(mockBoard: Array<Array<number>>, col: number, player: number) {
     for (let row = 5; row >= 0; row--) {
-      if (board[row][col] === 0) {
-          board[row][col] = player;
-          return board;
+      if (mockBoard[row][col] === 0) {
+          mockBoard[row][col] = player;
+          return mockBoard;
       }
     }
   }
 
-  // function evaluateBoard(board, player) {
-  //   const otherPlayer = player === 1 ? 2 : 1;
-  //   let score = 0;
+  function calcScore(scope: Array<number>, player: number) {
+    const otherPlayer: number = player === 1 ? 2 : 1;
+    const net = scope.filter(space => space === player);
+    const neg = scope.filter(space => space === 0);
+    const oppose = scope.filter(space => space === otherPlayer);
+    let score = 0;
+
+    if(net.length === 3 && neg.length === 1) score += 5;
+    if(net.length === 2 && neg.length === 2) score += 2;
+    if(oppose.length === 3 && neg.length === 1) score += 10;
+
+    return score;
+  }
+
+  function evaluateBoard(mockBoard: Array<Array<number>>, player: number) {
+    let score = 0;
   
-  //   // Check horizontal scores
-  //   for (let row = 0; row < board.length; row++) {
-  //     for (let col = 0; col < board[0].length - 3; col++) {
-  //       const window = [board[row][col], board[row][col+1], board[row][col+2], board[row][col+3]];
-  //       score += evaluateWindow(window, player, otherPlayer);
-  //     }
-  //   }
+    // Check horizontal scores
+    for (let row = 0; row < mockBoard.length; row++) {
+      for (let col = 0; col < mockBoard[0].length - 3; col++) {
+        const scope = [mockBoard[row][col], mockBoard[row][col+1], mockBoard[row][col+2], mockBoard[row][col+3]];
+        score += calcScore(scope, player);
+      }
+    }
   
-  //   // Check vertical scores
-  //   for (let row = 0; row < board.length - 3; row++) {
-  //     for (let col = 0; col < board[0].length; col++) {
-  //       const window = [board[row][col], board[row+1][col], board[row+2][col], board[row+3][col]];
-  //       score += evaluateWindow(window, player, otherPlayer);
-  //     }
-  //   }
+    // Check vertical scores
+    for (let row = 0; row < mockBoard.length - 3; row++) {
+      for (let col = 0; col < mockBoard[0].length; col++) {
+        const scope = [mockBoard[row][col], mockBoard[row+1][col], mockBoard[row+2][col], mockBoard[row+3][col]];
+        score += calcScore(scope, player);
+      }
+    }
   
-  //   // Check diagonal scores (positive slope)
-  //   for (let row = 0; row < board.length - 3; row++) {
-  //     for (let col = 0; col < board[0].length - 3; col++) {
-  //       const window = [board[row][col], board[row+1][col+1], board[row+2][col+2], board[row+3][col+3]];
-  //       score += evaluateWindow(window, player, otherPlayer);
-  //     }
-  //   }
+    // Check diagonal scores (Right)
+    for (let row = 0; row < mockBoard.length - 3; row++) {
+      for (let col = 0; col < mockBoard[0].length - 3; col++) {
+        const scope = [mockBoard[row][col], mockBoard[row+1][col+1], mockBoard[row+2][col+2], mockBoard[row+3][col+3]];
+        score += calcScore(scope, player);
+      }
+    }
   
-  //   // Check diagonal scores (negative slope)
-  //   for (let row = 0; row < board.length - 3; row++) {
-  //     for (let col = 3; col < board[0].length; col++) {
-  //       const window = [board[row][col], board[row+1][col-1], board[row+2][col-2], board[row+3][col-3]];
-  //       score += evaluateWindow(window, player, otherPlayer);
-  //     }
-  //   }
+    // Check diagonal scores (Left)
+    for (let row = 0; row < mockBoard.length - 3; row++) {
+      for (let col = 3; col < mockBoard[0].length; col++) {
+        const scope = [mockBoard[row][col], mockBoard[row+1][col-1], mockBoard[row+2][col-2], mockBoard[row+3][col-3]];
+        score += calcScore(scope, player);
+      }
+    }
   
-  //   return score;
-  // }
+    return score;
+  }
 
   // Depth = AI difficulty
-  const minMax = function(board: Array<Array<number>>, depth: number, player: number) {
+  const minMax = function(mockBoard: Array<Array<number>>, depth: number, player: number) {
+    console.log(depth, player);
+    
     if (depth === 0) {
-      return { score: evaluateBoard(board, player) }
+      console.log('should break here');
+      return { score: evaluateBoard(mockBoard, player) }
     }
 
-    
-    const validMoves: Array<number> = checkPossibleMoves(board);
-    let bestMove: number, bestScore;
+    const validMoves: Array<number> = checkPossibleMoves(mockBoard);
+    if(validMoves.length === 0) {
+      console.log('this triggered me');
+      return { score: evaluateBoard(mockBoard, player)}
+    }
+
+    let bestMove: number = 0;
+    let bestScore: number = 0;
     if(player === 2) bestScore = -Infinity;
     if(player === 1) bestScore = Infinity;
     
     for (let i=0; i < validMoves.length; i++) {
       const move = validMoves[i];
-      const newBoard = mockMove(board, move, player) || board;
-      const result : Object = minMax(newBoard, depth -1, player = player === 1 ? 2 : 1)
-
-      // if (player & result.score > bestScore) {
-      //   bestScore = result.score;
-      //   bestMove = move;
-      // }
+      // TypeScript work-around ( cant be undefined ) so added || board;
+      const newBoard = mockMove(mockBoard, move, player) || mockBoard; 
+      const result: any = minMax(newBoard, depth -1, player = player === 1 ? 2 : 1)
+      
+      if (player === 2 && result.score > bestScore) {
+        bestScore = result.score;
+        bestMove = move;
+      }
+      if (player === 1 && result.score > bestScore) {
+        bestScore = result.score;
+        bestMove = move;
+      }
+      console.log(newBoard, bestMove, bestScore);
     }
 
-    return { move: bestMove = 0, score: bestScore };
+    return { move: bestMove || validMoves[0], score: bestScore };
   }
+
+export const AImove = function() {
+    const copyBoard = [...board];
+    const whatMoveToMake = minMax(copyBoard, AI_DIFFICULTY, currentPlayer);
+    if(whatMoveToMake.move) return whatMoveToMake.move;
+    return 0;
 }
