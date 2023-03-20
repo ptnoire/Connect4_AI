@@ -121,9 +121,31 @@ function evaluateBoard(mockBoard: Array<Array<number>>, player: number) {
   
   ## The Design
   (March 20, 2023 -- End of Day)
+  
   The biggest issues I face at the moment is the fact that JavaScript passes by reference. This is specfically an issue when you have an array of arrays. So for the time being, I've fetched lodash's clone deep function to try and overcome this, it's working somewhat, but when the depth is set higher the processing power is just too much.
   
   I have ended the day with getting the AI to at least block a vertical victory from the player. This only happens if the player just puts pieces in the first column and hits 3 in a row. I've tried getting the AI to block a horizontal victory but it didn't work so still somethings to work out.
+  
+  You can check the commits but that is annoying so I'll post the major changes in a short blurb here:
+```
+      if (player === 2 && result.score === 10 || result.score === 5) {
+        return { move: move, score: result.score };
+      }
+```
+
+```
+export const AImove = function() {
+    const copyBoard = JSON.parse(JSON.stringify(board));
+    const i = 0;
+    let whatMoveToMake = minMax(copyBoard, AI_DIFFICULTY, currentPlayer, i);
+    const move = whatMoveToMake.move;
+    return move;
+}
+```
+
+```
+const newBoard = lodash.cloneDeep(mockMove(mockBoard, move, player));
+```
   
   As well, I need to do a bubbling event on the click, because currently you can just skip turns by clicking on the table and having nothing happen. Thought I had already implemented this but seems I made a mistake. Will keep at it until this is finished but this is the first time where I have found JavaScript not acting as I wanted. Perhaps this is how people switch languages.. cheers!
   
