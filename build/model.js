@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AImove = exports.checkForWin = exports.makeMove = exports.reset = exports.AI_DIFFICULTY = exports.winningMove = exports.gameState = exports.currentPlayer = exports.board = void 0;
+const lodash = require("lodash");
 exports.board = [
     [0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0],
@@ -24,6 +25,7 @@ function reset() {
     ];
     exports.gameState = '';
     exports.winningMove = [];
+    exports.currentPlayer = 1;
 }
 exports.reset = reset;
 function makeMove(col) {
@@ -113,6 +115,8 @@ const mockMove = function (mockBoard, col, player) {
             return mockBoard;
         }
     }
+    console.log('failed');
+    return mockBoard;
 };
 function calcScore(scope, player) {
     const otherPlayer = player === 1 ? 2 : 1;
@@ -121,11 +125,11 @@ function calcScore(scope, player) {
     const oppose = scope.filter(space => space === otherPlayer);
     let score = 0;
     if (net.length === 3 && neg.length === 1)
-        score += 5;
+        score += 10;
     if (net.length === 2 && neg.length === 2)
         score += 2;
     if (oppose.length === 3 && neg.length === 1)
-        score += 10;
+        score += 5;
     return score;
 }
 function evaluateBoard(mockBoard, player) {
@@ -161,45 +165,42 @@ function evaluateBoard(mockBoard, player) {
     return score;
 }
 // Depth = AI difficulty
-const minMax = function (mockBoard, depth, player) {
-    console.log(depth, player);
+const minMax = function (mockBoard, depth, player, i) {
+    const iteration = i += 1;
     if (depth === 0) {
-        console.log('should break here');
-        return { score: evaluateBoard(mockBoard, player) };
+        return { score: evaluateBoard(mockBoard, player), depth: depth, player: player, iteration: iteration };
     }
     const validMoves = checkPossibleMoves(mockBoard);
     if (validMoves.length === 0) {
-        console.log('this triggered me');
-        return { score: evaluateBoard(mockBoard, player) };
+        return { score: evaluateBoard(mockBoard, player), depth: depth, player: player, iteration: iteration };
     }
     let bestMove = 0;
     let bestScore = 0;
-    if (player === 2)
-        bestScore = -Infinity;
-    if (player === 1)
-        bestScore = Infinity;
     for (let i = 0; i < validMoves.length; i++) {
         const move = validMoves[i];
-        // TypeScript work-around ( cant be undefined ) so added || board;
-        const newBoard = mockMove(mockBoard, move, player) || mockBoard;
-        const result = minMax(newBoard, depth - 1, player = player === 1 ? 2 : 1);
+        const newBoard = lodash.cloneDeep(mockMove(mockBoard, move, player));
+        const result = minMax(newBoard, depth - 1, player = player === 1 ? 2 : 1, iteration);
+        if (player === 2 && result.score === 10 || result.score === 5) {
+            return { move: move, score: result.score };
+        }
         if (player === 2 && result.score > bestScore) {
+            // console.log(`Player 2 Condition: Player: ${player}, Result.Score: ${result.score}, Best Score: ${bestScore}, Move: ${bestMove}, Depth: ${depth}`);
             bestScore = result.score;
             bestMove = move;
         }
         if (player === 1 && result.score > bestScore) {
             bestScore = result.score;
             bestMove = move;
+            // console.log(`Player 1 Condition: Player: ${player}, Result.Score: ${result.score}, Best Score: ${bestScore}, Move: ${bestMove}, Depth: ${depth}`);
         }
-        console.log(newBoard, bestMove, bestScore);
     }
-    return { move: bestMove || validMoves[0], score: bestScore };
+    return { move: bestMove, score: bestScore, depth, player, mockBoard };
 };
 const AImove = function () {
-    const copyBoard = [...exports.board];
-    const whatMoveToMake = minMax(copyBoard, exports.AI_DIFFICULTY, exports.currentPlayer);
-    if (whatMoveToMake.move)
-        return whatMoveToMake.move;
-    return 0;
+    const copyBoard = JSON.parse(JSON.stringify(exports.board));
+    const i = 0;
+    let whatMoveToMake = minMax(copyBoard, exports.AI_DIFFICULTY, exports.currentPlayer, i);
+    const move = whatMoveToMake.move;
+    return move;
 };
 exports.AImove = AImove;
