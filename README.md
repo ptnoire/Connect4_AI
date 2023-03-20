@@ -163,4 +163,11 @@ We have:
   }
   ```
 EDIT 1: I think I found out where I originally went wrong, I overlooked the fact that on 0 depth and 0 valid moves it wouldn't return a move. A short sighted error.
+
+Now as these new arguments are being passed, it will eventually reach this stage:
+```
+Is result's score higher than the previous score? -> If yes, replace the score + move -> Return this data
+```
+
+EDIT 2: I also realize as I'm writing this that I am only ever collecting the first iteration of this minMax function. Will return when I figure this out. B)
   
