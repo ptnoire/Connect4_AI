@@ -120,6 +120,13 @@ function evaluateBoard(mockBoard: Array<Array<number>>, player: number) {
   ```
   
   ## The Design
+  (March 20, 2023 -- End of Day)
+  The biggest issues I face at the moment is the fact that JavaScript passes by reference. This is specfically an issue when you have an array of arrays. So for the time being, I've fetched lodash's clone deep function to try and overcome this, it's working somewhat, but when the depth is set higher the processing power is just too much.
+  
+  I have ended the day with getting the AI to at least block a vertical victory from the player. This only happens if the player just puts pieces in the first column and hits 3 in a row. I've tried getting the AI to block a horizontal victory but it didn't work so still somethings to work out.
+  
+  As well, I need to do a bubbling event on the click, because currently you can just skip turns by clicking on the table and having nothing happen. Thought I had already implemented this but seems I made a mistake. Will keep at it until this is finished but this is the first time where I have found JavaScript not acting as I wanted. Perhaps this is how people switch languages.. cheers!
+  
   (March 20, 2023)
   * Once the player (who goes first) clicks the column they want to play their piece in, the controller will then call the AI model to move.
   * A copy of the board is made (currently, for some reason the original board is mutating, which is my biggest bug. I do not know why this is happening at the moment,  it shouldn't be touching the original array but it somehow is) and then it passed into an function as an argument along with the `AI_DIFFICULTY` variable which will be defined by the player, it is simply a number that reflects how many iterations of moves the AI can look ahead to determine the best move, as well as the currentPlayer variable which should always start as 2 (which is the AI)
