@@ -7,7 +7,7 @@ const navView_1 = require("./views/navView");
 const makeMove = (col) => {
     if (model.gameState === '') {
         cellView_2.default.render(model.makeMove(col));
-        switchTurn();
+        setTimeout(() => switchTurn(), 1000);
     }
     if (model.gameState !== '') {
         navView_1.default.titleChange(model.gameState);
@@ -15,7 +15,9 @@ const makeMove = (col) => {
     }
 };
 const switchTurn = () => {
-    cellView_2.default.render(model.makeMove(model.AImove()));
+    if (model.gameState === '') {
+        cellView_2.default.render(model.makeMove(model.AImove()));
+    }
 };
 const resetBoard = () => {
     model.reset();
