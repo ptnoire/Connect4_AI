@@ -5,6 +5,319 @@ A friend said 'make a connect 4 game, then try to make an AI that you can't beat
 Just for fun, also first full program written with TypeScript.
 
 Friend said to check out `minmax` algo, so I begun my deep dive in on it.
+
+
+# March 21st, 2023 --- Working Prototype Shipment!
+## Top Level Overview / How I Deviated from the Original Design
+* The AI will look at all of the valid moves, then determine which move is the best depending on a few different factors, mainly victory and blocking victory.
+* The `depth` parameter is idle for now, until I can refactor the code to process a more valid look at moves ahead.
+*   * The reason I had to redesign this aspect is because JavaScript (TypeScript in this instance) passes objects and arrays as reference, this meant that even though I was making copies of arrays of arrays, it would always mutate the original array. Even after implementing lodash's cloneDeep(), it just wasn't enough. Therefore; the thousands of computations that the AI had to go through would run in real time, just simply requiring too much strain on the system (browser) although when I return I have a solution to this that I will describe once I finish it's arechitecture.
+* Now, the AI looks at all the valid moves and will make a move based upon 'it's best interest' unless the opponent (player) is about to win. If there are no advantageous moves, it will select a valid move at pseudo-random just to create a spicy opponent to play against.
+
+## How I redesigned the Helper Functions
+If you're curious as to the lifespan of this project, please see below on the original updates / notes.
+
+Finding Possible Moves:
+```
+const checkPossibleMoves = function(mockBoard: Array<Array<number>>) {
+  let possibleMoves = [];
+  for (let col = 0; col < 7; col++) {
+    if (mockBoard[0][col] === 0) {
+      possibleMoves.push(col);
+    }
+  }
+  return possibleMoves;
+}
+```
+
+Creating a Mock Move and then examining the results. The way I changed this from before is that this function had no way of knowing what the current move made was, so when scoring the results it would always result in scoring as if the board had already had that move in place, confusing the algorithm constantly and creating odd events like the computer refusing to block the player's victories or just ignoring obvious victories.
+```
+const mockMove = function(mockBoard: Array<Array<number>>, col: number, player: number) {
+  for (let row = 5; row >= 0; row--) {
+    if (mockBoard[row][col] === 0) {
+        mockBoard[row][col] = player;
+        return mockBoard;
+    }
+  }
+
+  return mockBoard;
+}
+```
+
+Calculating the score value of the current move made:
+```
+function calcScore(scope: Array<number>, player: number) {
+  const otherPlayer: number = 1;
+  const currentMove = scope.filter(space => space === 3);
+  const net = scope.filter(space => space === player);
+  const neg = scope.filter(space => space === 0);
+  const oppose = scope.filter(space => space === otherPlayer);
+  let score = 0;
+
+  if(net.length === 3 && currentMove.length === 1) score += 1000;
+  if(net.length === 2 && currentMove.length === 1) score += 15;
+  if(net.length === 1 && currentMove.length === 1) score += 10;
+  if(oppose.length === 3 && currentMove.length === 1) score += 1000;
+
+  return score;
+}
+```
+
+Dissecting the board, piece by piece to score the moves made and the current state of the board.
+```
+function evaluateBoard(mockBoard: Array<Array<number>>, player: number, iteraton: number) {
+  let score = 0;
+  
+  // Check horizontal scores
+  for (let row = 0; row < mockBoard.length; row++) {
+    for (let col = 0; col < mockBoard[0].length - 3; col++) {
+      const scope = [mockBoard[row][col], mockBoard[row][col+1], mockBoard[row][col+2], mockBoard[row][col+3]];
+      if (score < 1000) {
+        score += calcScore(scope, player);
+      }
+      if (score >= 1000) {
+        break
+      }
+    }
+  }
+  if (score >= 1000) {
+    return score;
+  }
+
+  score = 0;
+
+  // Check vertical scores
+  for (let row = 0; row < mockBoard.length - 3; row++) {
+    for (let col = 0; col < mockBoard[0].length; col++) {
+      const scope = [mockBoard[row][col], mockBoard[row+1][col], mockBoard[row+2][col], mockBoard[row+3][col]];
+      if (score < 1000) {
+        score += calcScore(scope, player);
+      }
+      if (score >= 1000) {
+        break
+      }
+    }
+  }
+  if (score >= 1000) {
+    return score;
+  }
+
+  score = 0;
+
+  // Check diagonal scores (Right)
+  for (let row = 0; row < mockBoard.length - 3; row++) {
+    for (let col = 0; col < mockBoard[0].length - 3; col++) {
+      const scope = [mockBoard[row][col], mockBoard[row+1][col+1], mockBoard[row+2][col+2], mockBoard[row+3][col+3]];
+      if (score < 1000) {
+          score += calcScore(scope, player);
+        }
+        if (score >= 1000) {
+          break
+        }
+      }
+  }
+  if (score >= 1000) {
+      return score;
+  }
+
+  score = 0;
+
+  // Check diagonal scores (Left)
+  for (let row = 0; row < mockBoard.length - 3; row++) {
+    for (let col = 3; col < mockBoard[0].length; col++) {
+      const scope = [mockBoard[row][col], mockBoard[row+1][col-1], mockBoard[row+2][col-2], mockBoard[row+3][col-3]];
+      if (score < 1000) {
+          score += calcScore(scope, player);
+        }
+        if (score >= 1000) {
+          break
+        }
+      }
+  }
+    if (score >= 1000) {
+      return score;
+  }
+
+  score = 0;
+  return score;
+}
+```
+
+A recursive min max function that will loop over itself, breaking only if a move is obvious or finding the highest valued move and returning it to pass to the AI to make the move:
+```
+const minMax = async function(mockBoard: Array<Array<number>>, depth: number, player: number, i: number) {
+  
+  const iteration = i+= 1;
+  if (depth === 0) {
+    return { score: evaluateBoard(mockBoard, player, iteration), depth: depth, player: player, iteration: iteration }
+  }
+
+  const validMoves: Array<number> = checkPossibleMoves(mockBoard);
+  if(validMoves.length === 0) {
+    return { score: evaluateBoard(mockBoard, player, iteration), depth: depth, player: player, iteration: iteration }
+  }
+
+  let bestMove: number = 0;
+  let bestScore: number = 0;
+  
+  for (let i=0; i < validMoves.length; i++) {
+    const move = validMoves[i];
+    const newMockBoard = lodash.cloneDeep(mockBoard);
+    const newBoard = lodash.cloneDeep(mockMove(newMockBoard, move, 3));
+    const result: any = await minMax(newBoard, 0, player, iteration);
+    
+    if (result.score >= 100) {
+      bestScore = result.score;
+      bestMove = move;
+      break;
+    }
+
+    if (result.score > bestScore) {
+      bestScore = result.score;
+      bestMove = move;
+    }
+  }
+
+  if(bestScore === 0) {
+    bestMove = validMoves[Math.floor(Math.random() * validMoves.length)];
+  }
+
+  return { move: bestMove, score: bestScore, depth, player, mockBoard };
+}
+```
+
+And the function that is called to activate all of this:
+```
+export const AImove = async function() {
+    const copyBoard = JSON.parse(JSON.stringify(board));
+    const i = 0;
+    let whatMoveToMake = await minMax(copyBoard, 1, currentPlayer, i);
+    const move = whatMoveToMake.move;
+    return move;
+}
+```
+
+## Nice Code Dump.. How does all of this work?
+Excellent question my dear reader, allow me to give you the tour.
+
+The game board is reflected upon this array of arrays:
+```
+export let board = [
+    [0, 0, 0, 0, 0, 0, 0], 
+    [0, 0, 0, 0, 0, 0, 0], 
+    [0, 0, 0, 0, 0, 0, 0], 
+    [0, 0, 0, 0, 0, 0, 0], 
+    [0, 0, 0, 0, 0, 0, 0], 
+    [0, 0, 0, 0, 0, 0, 0], 
+];
+```
+
+When the player clicks, a function will run that is similar to 'mockMove' where it will loop over the `board` array and find the lowest row, of the column that is clicked on:
+
+```
+  for (let row = 5; row >= 0; row--) {
+    if (board[row][col] === 0) {
+        board[row][col] = currentPlayer;
+  }
+```
+Note: This is a snippet of the actual code.
+
+Once the player moves, it will then pass the turn to the AI. This function is called `AImove`.
+
+The life cycle of `AImove` is:
+```
+Get a copy of the game board -> asynchronously run minMax() -> return the move that should be made -> make the move
+```
+
+Inside of the minMax move this is what happens:
+
+```
+Intake: copy of the game board, depth (AI DIFFICULTY), current player, iteration (for tracking purposes)
+Gather Valid Moves
+For Loop that runs each valid move into a mock simulation, then scores those moves based upon the score system
+If the score beats the current or last score, it will replace the bestMove with that move
+returns the move for the AI to  make.
+```
+The for loop that will run and analyze scores/moves
+```
+  for (let i=0; i < validMoves.length; i++) {
+    const move = validMoves[i];
+    const newMockBoard = lodash.cloneDeep(mockBoard);
+    const newBoard = lodash.cloneDeep(mockMove(newMockBoard, move, 3));
+    const result: any = await minMax(newBoard, 0, player, iteration);
+    
+    if (result.score >= 100) {
+      bestScore = result.score;
+      bestMove = move;
+      break;
+    }
+
+    if (result.score > bestScore) {
+      bestScore = result.score;
+      bestMove = move;
+    }
+  }
+```
+If the score ever hits above 100, it is a move that makes the most sense to make regardless of the future prospects because this would either mean that the player is about to win or the AI can win, so it will break the entire cycle if a move is obvious. This was one of the major changes I made to the original design where the AI would blow past obvious moves to make deeply thought out moves about the future but never the present.
+
+The result will be returned asychronously, this allows the processes to be run outside of the call stack, allowing for a faster operation of these computations.
+
+Being that I paused the depth parameter to just get a working protoype, I make sure that every recursive instance of 'minmax' just returns the evaluated score of the move that was just made, meaning it will only analyze the valid moves that are available via this line:
+```
+if (depth === 0) return { score: evaluateBoard(mockBoard, player, iteration) }
+```
+
+Inside the evaluation we will run multiple for loops over and take out snippets of the array / board and analyze them based on the current move made (3) and give it a score based on the `calcScore` function:
+
+For example:
+```
+  // Check horizontal scores
+  for (let row = 0; row < mockBoard.length; row++) {
+    for (let col = 0; col < mockBoard[0].length - 3; col++) {
+      const scope = [mockBoard[row][col], mockBoard[row][col+1], mockBoard[row][col+2], mockBoard[row][col+3]];
+      if (score < 1000) {
+        score += calcScore(scope, player);
+      }
+      if (score >= 1000) {
+        break
+      }
+    }
+  }
+  if (score >= 1000) {
+    return score;
+  }
+```
+```
+function calcScore(scope: Array<number>, player: number) {
+  const otherPlayer: number = 1;
+  const currentMove = scope.filter(space => space === 3);
+  const net = scope.filter(space => space === player);
+  const neg = scope.filter(space => space === 0);
+  const oppose = scope.filter(space => space === otherPlayer);
+  let score = 0;
+
+  if(net.length === 3 && currentMove.length === 1) score += 1000;
+  if(net.length === 2 && currentMove.length === 1) score += 15;
+  if(net.length === 1 && currentMove.length === 1) score += 10;
+  if(oppose.length === 3 && currentMove.length === 1) score += 1000;
+
+  return score;
+}
+```
+
+Another major design change was made so that the score would break if it ever reached the obvious threshold, in the future I will do a bit better math on calculations, at the moment it's design is obvious large numbers, but still allowing smaller numbers to be added up. (i.e. if it ever hits 1000, it would be an obvious move and should break the cycles.
+
+# Notes
+Hello thank you for finding this section, I am happy to of shipped a working protoype of this AI, I will return to refactor and make this AI more powerful for at the moment you can easily beat the AI if you're mildly clever with your moves.
+
+I have a lot of projects to work on and a lot of commissions at the moment, I hope you enjoy this simple app. My thoughts are I need to update the mobile view and just make it a bit cleaner, I worked so much on the logic of this that I didn't think too much on the design past the initial mock up.
+
+Cheers from PT.
+
+# Below is the previous updates
+
+
+
 ## Top Level Overview for How this AI will Function
 * The AI will look ahead of the current game state to see all possible moves and then determine which move would be the most optimal.
 * It will have a `depth` parameter, defined by the difficulty, which will directly influence how many moves ahead it will analyze.
