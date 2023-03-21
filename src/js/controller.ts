@@ -4,19 +4,25 @@ import RowCellView from './views/cellView';
 import navView from './views/navView';
 
 const makeMove = (col : number) => {
-  if(model.gameState === '') {
+  if(model.gameState === '' && model.currentPlayer === 1) {
     RowCellView.render(model.makeMove(col));
+    checkWin();
     setTimeout(() => switchTurn(), 1000);
   }
-  if(model.gameState !== '') {
-    navView.titleChange(model.gameState);
-    cellView.renderWinningMoves(model.winningMove);
+
+}
+
+const switchTurn = async () => {
+  if(model.gameState === '' && model.currentPlayer === 2){
+  RowCellView.render(model.makeMove(await model.AImove() || 0));
+  checkWin();
   }
 }
 
-const switchTurn = () => {
-  if(model.gameState === ''){
-  RowCellView.render(model.makeMove(model.AImove()));
+const checkWin = () => {
+  if(model.gameState !== '') {
+    navView.titleChange(model.gameState);
+    cellView.renderWinningMoves(model.winningMove);
   }
 }
 

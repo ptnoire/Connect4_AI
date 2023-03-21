@@ -19,7 +19,7 @@ class RowCellView extends view_1.View {
     }
     addClickHandler(handler) {
         this._parentElement?.addEventListener('click', function (e) {
-            if (e.target instanceof HTMLElement) {
+            if (e.target instanceof HTMLElement && e.target.classList.contains('cell')) {
                 const num = e.target.dataset.col;
                 handler(num);
             }
